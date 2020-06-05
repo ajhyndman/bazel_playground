@@ -1,6 +1,11 @@
-load("@org_pubref_rules_node//node:rules.bzl", "node_binary")
+load("@org_pubref_rules_node//node:rules.bzl", "node_binary", "node_module")
+
+node_module(
+    name = "example",
+    package_json = "package.json",
+)
 
 node_binary(
-    name = "example",
-    main = "index.js",
+    name = "myscript",
+    entrypoint = ":example",
 )

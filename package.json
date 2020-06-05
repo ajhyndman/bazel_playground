@@ -8,8 +8,9 @@
         "@bazel/buildifier": "latest"
     },
     "scripts": {
+        "clean": "bazel clean",
         "build": "bazel build //...",
         "test": "bazel test //...",
-        "run:example": "bazel run //packages/example:example"
+        "run:example": "bazel run //packages/example:myscript"
     }
 }
