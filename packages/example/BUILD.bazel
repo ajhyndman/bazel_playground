@@ -1,0 +1,6 @@
+load("@org_pubref_rules_node//node:rules.bzl", "node_binary")
+
+node_binary(
+    name = "example",
+    main = "index.js",
+)
