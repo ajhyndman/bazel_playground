@@ -10,25 +10,20 @@ workspace(
     managed_directories = {"@npm": ["node_modules"]},
 )
 
-# Install the nodejs "bootstrap" package
-# This provides the basic tools for running and packaging nodejs programs in Bazel
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+# Install pubref/rules_node
+# See https://github.com/pubref/rules_node
+RULES_NODE_COMMIT = '945abf1682b874b1c8a78cc96770c84741e7f092' # Update to current HEAD
+RULES_NODE_SHA256 = 'abc4815e678ddf550e74810ddc037138a713b1a272bbebcbcc0f47a2f62c3cf0'
+
 http_archive(
-    name = "build_bazel_rules_nodejs",
-    sha256 = "84abf7ac4234a70924628baa9a73a5a5cbad944c4358cf9abdb4aab29c9a5b77",
-    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/1.7.0/rules_nodejs-1.7.0.tar.gz"],
+    name = "org_pubref_rules_node",
+    url = "https://github.com/pubref/rules_node/archive/%s.zip" % RULES_NODE_COMMIT,
+    strip_prefix = "rules_node-%s" % RULES_NODE_COMMIT,
+    sha256 = RULES_NODE_SHA256,
 )
 
-# The npm_install rule runs yarn anytime the package.json or package-lock.json file changes.
-# It also extracts any Bazel rules distributed in an npm package.
-load("@build_bazel_rules_nodejs//:index.bzl", "npm_install")
-npm_install(
-    # Name this npm so that Bazel Label references look like @npm//package
-    name = "npm",
-    package_json = "//:package.json",
-    package_lock_json = "//:package-lock.json",
-)
+load("@org_pubref_rules_node//node:rules.bzl", "node_repositories")
 
-# Install any Bazel rules which were extracted earlier by the npm_install rule.
-load("@npm//:install_bazel_dependencies.bzl", "install_bazel_dependencies")
-install_bazel_dependencies()
+node_repositories()
